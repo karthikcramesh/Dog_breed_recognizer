@@ -36,12 +36,23 @@ def predict_dog_breed(image):
         probs = F.softmax(output, dim=1)[0]
     
     predicted_idx = int(torch.argmax(probs))
-    confidence = float(probs[predicted_idx].item())
     breed = labels[predicted_idx]
     metadata = get_breed_info(predicted_idx)
+    is_dog = predicted_idx in DOG_CLASS_RANGE
+    
+    # Calculate confidence
+    if is_dog:
+        # For dogs: show confidence as top dog breed probability divided by total dog probability
+        dog_probs = probs[list(DOG_CLASS_RANGE)]
+        total_dog_prob = dog_probs.sum().item()
+        top_dog_prob = float(probs[predicted_idx].item())
+        confidence = (top_dog_prob / total_dog_prob) if total_dog_prob > 0 else 0
+    else:
+        # For non-dogs: show raw probability
+        confidence = float(probs[predicted_idx].item())
     
     return {
-        "is_dog": predicted_idx in DOG_CLASS_RANGE,
+        "is_dog": is_dog,
         "breed": breed,
         "origin": metadata["origin"],
         "lifespan": metadata["lifespan"],
