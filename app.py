@@ -55,4 +55,4 @@ if st.session_state.image_uploaded is not None:
 
         if st.button("Clear", key="clear_btn", use_container_width=True):
             st.session_state.image_uploaded = None
-            st.experimental_rerun()
+            st.rerun()
