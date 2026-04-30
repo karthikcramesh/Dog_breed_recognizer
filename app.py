@@ -52,3 +52,7 @@ if st.session_state.image_uploaded is not None:
                         st.write(f"**Confidence:** {result['confidence'] * 100:.1f}%")
                 except Exception as e:
                     st.error(f"Classification failed: {e}")
+
+        if st.button("Clear", key="clear_btn", use_container_width=True):
+            st.session_state.image_uploaded = None
+            st.experimental_rerun()
